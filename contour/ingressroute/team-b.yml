@@ -6,7 +6,8 @@ metadata:
   namespace: team-b
 spec:
   routes:
-    - match: /teamb
+    - match: /team-b
+      prefixRewrite: "/"
       services:
         - name: kuard
           port: 8080

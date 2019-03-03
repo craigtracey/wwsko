@@ -12,14 +12,14 @@ spec:
       services:
         - name: kuard
           port: 8080
-    - match: "/teama"
+    - match: /team-a
       delegate:
         name: kuard
-        namepsace: team-a
-    - match: "/teamb"
+        namespace: team-a
+    - match: /team-b
       delegate:
         name: kuard
-        namepsace: team-b
+        namespace: team-b
 ---
 kind: Service
 apiVersion: v1
