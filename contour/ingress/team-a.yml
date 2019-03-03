@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: team-a
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kuard
+  namespace: team-a
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kuard
+          servicePort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kuard
+  namespace: team-a
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: kuard
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+  namespace: team-a
+  labels:
+    app: kuard
+spec:
+  containers:
+  - image: gcr.io/kuar-demo/kuard-amd64:blue
+    name: kuard
+    env:
+    - name: A_WWSKO_POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: A_WWSKO_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace 

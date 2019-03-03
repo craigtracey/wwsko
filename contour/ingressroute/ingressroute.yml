@@ -1,0 +1,54 @@
+---
+apiVersion: contour.heptio.com/v1beta1
+kind: IngressRoute
+metadata:
+  name: namespace-delegation-root
+  namespace: default
+spec:
+  virtualhost:
+    fqdn: wwsko.example.com
+  routes:
+    - match: /
+      services:
+        - name: kuard
+          port: 8080
+    - match: "/teama"
+      delegate:
+        name: kuard
+        namepsace: team-a
+    - match: "/teamb"
+      delegate:
+        name: kuard
+        namepsace: team-b
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kuard
+spec:
+  selector:
+    app: kuard
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+  labels:
+    app: kuard
+spec:
+  containers:
+  - image: gcr.io/kuar-demo/kuard-amd64:blue
+    name: kuard
+    env:
+    - name: A_WWSKO_POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: A_WWSKO_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace 

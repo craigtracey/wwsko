@@ -1,0 +1,12 @@
+---
+apiVersion: contour.heptio.com/v1beta1
+kind: IngressRoute
+metadata:
+  name: kuard
+  namespace: team-a
+spec:
+  routes:
+    - match: "/teama"
+      services:
+        - name: kuard
+          port: 8080
